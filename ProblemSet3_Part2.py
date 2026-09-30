@@ -74,12 +74,11 @@ for line in loiter_line_list[1:]:
 
     equator_crossed = ((starting_lat) * (ending_lat)) < 0 and starting_lat < 0
 
-    starting_lon_inrange = 145 <= float(starting_lon) <= 155
+    ending_lon_inrange = 120 <= float(ending_lon) <= 135
         
-    if equator_crossed and starting_lon_inrange:
+    if equator_crossed and ending_lon_inrange:
         loitering_vessels.append(loiter_mmsi)
-        print(starting_lat, ending_lat, starting_lon)
-    
+        
 for i in loitering_vessels:
     vessel_fleet = vessel_dict[i]
     print('Vessel # '+ i + " flies the flag of " + vessel_fleet)
