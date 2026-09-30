@@ -53,37 +53,36 @@ with open(file='data/raw/loitering_events_20180723.csv',mode='r') as file_obj:
     #Read the entire contents into a list object
     loiter_line_list = file_obj.readlines()
 
+loiter_header = loiter_line_list[0]
+header_items = loiter_header.split(',')
+
+mmsi_i      = header_items.index('transshipment_mmsi')
+start_lat_i = header_items.index('starting_latitude')
+start_lon_i = header_items.index('starting_longitude')
+end_lat_i   = header_items.index('ending_latitude')
+end_lon_i = header_items.index('ending_longitude')
+
 loitering_vessels = []
 
-for loiter_line in loiter_line_list[1:]:
-    loiter_line_string = loiter_line.split(',')
-    loiter_mmsi = loiter_line_string[0]
-    starting_lat = loiter_line_string[1]
-    ending_lat = loiter_line_string[2]
-    starting_lon = loiter_line_string[3]
-    ending_lon = loiter_line_string[4]
+for line in loiter_line_list[1:]:
+    line_string = line.strip().split(',')
+    loiter_mmsi = line_string[mmsi_i]
+    starting_lat = float(line_string[start_lat_i])
+    ending_lat = float(line_string[end_lat_i])
+    starting_lon = float(line_string[start_lon_i])
+    ending_lon = float(line_string[end_lon_i])
 
-    x = float(starting_lat) * float(ending_lat) 
-    sign = (x > 0) - (x < 0)
-    
-    if sign == -1:
-        equator_crossed = True
-    else:
-        equator_crossed = False
+    equator_crossed = ((starting_lat) * (ending_lat)) < 0 and starting_lat < 0
 
-    if float(starting_lon) < 135 and float(starting_lon) > 120:
-        starting_lon_inrange = True
-    else:
-        starting_lon_inrange = False
+    starting_lon_inrange = 145 <= float(starting_lon) <= 155
         
     if equator_crossed and starting_lon_inrange:
         loitering_vessels.append(loiter_mmsi)
-    else:
-        continue
-
-print(loitering_vessels)
-
-
+        print(starting_lat, ending_lat, starting_lon)
+    
+for i in loitering_vessels:
+    vessel_fleet = vessel_dict[i]
+    print('Vessel # '+ i + " flies the flag of " + vessel_fleet)
 
 
 
