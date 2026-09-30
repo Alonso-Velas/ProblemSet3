@@ -31,7 +31,7 @@ for i in range(3):
     user_numbers.append(number)
 
 user_numbers.sort()
-print(max(user_numbers))
+print(user_numbers[-1])
 
 #%% Task 3 - Challenge
 
